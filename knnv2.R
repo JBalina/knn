@@ -35,6 +35,11 @@ valSize <- nrow(data.n.list)-trainSize
 data.n.list <- sample(data.n.list, length(data.n.list), replace = FALSE)
 train.n.list <- data.n.list[1:trainSize]
 val.n.list <- data.n.list[(trainSize+1):length(data.n.list)]
+test <- read.table("monks-1.test", header = FALSE)
+test <- test[ ,1:7]
+test.n <- as.data.frame(lapply(test[1:6], normalize))
+test.n$v7 <- test[,7]
+test.n.list <- split(test.n, seq(nrow(test.n)))
 #print(train.n.list)
 #print(val.n.list)
 
@@ -100,6 +105,7 @@ for (i in 1:length(accuracy)) {
 highK <- highestInd
 lowK <- lowestInd
 k <- lowK+(highK-lowK)/2
+print(k)
 
 for (v3 in test.n.list) {
   predicted <- 1
