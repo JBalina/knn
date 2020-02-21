@@ -51,16 +51,16 @@ for(k in 1:length(train.n.list)) {
   count <- 0
   tim <- 1
   for (v3 in val.n.list) {
-    predicted <- 1
+    predicted <- 2
     count_1 <- 0
     count_2 <- 0
     distances <- get_neighbors(v3,train.n.list)
     for (i in 1:k) {
-      if (distances[[1]][[2]][[length(distances[[1]][[2]])]] == 1) {
-        count_1 <- (count_1+1)/(distances[[i]][[1]]+1)
+      if (distances[[i]][[2]][[length(distances[[i]][[2]])]] == 1) {
+        count_1 <- count_1+1/(distances[[i]][[1]]+1)
       }
       else {
-        count_2 <- (count_2+1)/(distances[[i]][[1]]+1)
+        count_2 <- count_2+1/(distances[[i]][[1]]+1)
       }
     }
     if (count_1 >= count_2) {
@@ -81,10 +81,10 @@ for(k in 1:length(train.n.list)) {
   #print("here I am")
   #print(count)
   #print(length(val.n.list))
-  #print(count/length(val.n.list))
+  print(count/length(val.n.list))
   #print("there i was")
   accuracy <- append(accuracy, (count/length(val.n.list)))
-  #print(accuracy[[1]])
+  
 }
 i <- 1
 highestVal <- 0
@@ -113,11 +113,11 @@ for (v3 in test.n.list) {
   count_2 <- 0
   distances <- get_neighbors(v3,train.n.list)
   for (i in 1:k) {
-    if (distances[[1]][[2]][[length(distances[[1]][[2]])]] == 1) {
-      count_1 <- (count_1+1)/(distances[[i]][[1]]+1)
+    if (distances[[i]][[2]][[length(distances[[i]][[2]])]] == 1) {
+      count_1 <- count_1+1/(distances[[i]][[1]]+1)
     }
     else {
-      count_2 <- (count_2+1)/(distances[[i]][[1]]+1)
+      count_2 <- count_2+1/(distances[[i]][[1]]+1)
     }
   }
   if (count_1 >= count_2) {
