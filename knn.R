@@ -126,26 +126,44 @@ lowK <- lowestInd
 k <- lowK+(highK-lowK)/2
 print(k)
 
-for (vItem in test.n.list) {
-  predicted <- 1
+for (testIndex in 1:nrow(test.n)) {
+  #print(test.n[testIndex,])
+  predicted <- 2
   count_2 <- 0
   count_4 <- 0
-  distances <- get_neighbors(vItem,train.n.list)
-  for (i in 1:k) {
+  #print(test.n[testIndex,])
+  distances <- get_neighbors(test.n[testIndex,],train.n)
+  i <- 1
+  while (i < k) {
+    #print(i)
+    #print(distances[[i]][[2]][[length(distances[[i]][[2]])]])
     if (distances[[i]][[2]][[length(distances[[i]][[2]])]] == 2) {
-      count_2 <- count_2+1/(distances[[i]][[1]]+1)
+      count_2 <- count_2+1/(distances[[i]][[1]][[1]]+1)
+      #print("c2")
     } else {
-      count_4 <- count_4+1/(distances[[i]][[1]]+1)
+      count_4 <- count_4+1/(distances[[i]][[1]][[1]]+1)
+      #print("c4")
     }
+    i <- i+1
   }
-  if (count_2 >= count_4) {
-    predicted <- 1
+  #print(2)
+  #print(count_2)
+  #print(count_4)
+  if(count_2 >= count_4) {
+    predicted <- 2
   } else {
     predicted <- 4
   }
-  if (predicted == vItem[[length(vItem)]]) {
+  #print(test.n[testIndex,])
+  #print(predicted)
+  if(predicted == test.n[testIndex,ncol(test.n)]) {
     count <- count+1
+  } else {
+    #print("nope")
   }
+  #print(count)
+  #print("ugh")
+  #print(tim)
   tim <- tim + 1
   
 }
