@@ -1,3 +1,5 @@
+sink("knnResults.txt")
+
 normalize <- function(x) {
   return ((x - min(x)) / (max(x) - min(x)))
 }
@@ -96,23 +98,27 @@ for(k in 1:nrow(train.n)) {
 i <- 1
 highestVal <- 0
 highestInd <- 1
-lowestVal <- 10
-lowestInd <- 1
+highLen <- 1
+
 for (i in 1:length(accuracy)) {
   if(accuracy[[i]] > highestVal) {
-    highestVal <- accuracy[i]
+    highestVal <- accuracy[[i]]
     highestInd <- i
   }
-  if(accuracy[[i]] < lowestVal) {
-    lowestVal <- accuracy[i]
-    lowestInd <- i
+  if(accuracy[[i]] == accuracy[[highestInd]]) {
+    highLen <- i
   }
 }
 
 highK <- highestInd
-lowK <- lowestInd
-k <- lowK+(highK-lowK)/2
-print(k+1)
+#highLen <- lowestInd
+#print(highK)
+#print(highLen)
+k <- highK+(highLen-highK)/2
+print(k)
 
-count <- apply(val.n, 1, get_acc,k=k,count = 0)
-print(sum(count)/nrow(val.n))
+
+count <- apply(test.n, 1, get_acc,k=k,count = 0)
+print(sum(count)/nrow(test.n))
+
+sink()

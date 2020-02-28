@@ -188,29 +188,34 @@ data <- read.table("monks-1.train", header = FALSE)
 data <- data[ ,1:7]
 data.n <- cbind(class=data[,1],as.data.frame(lapply(data[2:7], normalize)))
 #data.n$v7 <- data[,1]
-data.n.list <- split(data.n, seq(nrow(data.n)))
+#data.n.list <- split(data.n, seq(nrow(data.n)))
 #print(data.n)
 trainSize <- floor(0.8*nrow(data))
 valSize <- nrow(data.n.list)-trainSize
-data.n <- data.n[sample(nrow(data.n), replace = FALSE),]
+#data.n <- data.n[sample(nrow(data.n), replace = FALSE),]
 train.n <- data.n[1:trainSize,]
 val.n <- data.n[(trainSize+1):nrow(data.n),]
 test <- read.table("monks-1.test", header = FALSE)
 test <- test[ ,1:7]
 test.n <- cbind(class=test[,1],as.data.frame(lapply(test[2:7], normalize)))
 
+###########################################################
+
 train.tree <- makeTree(train.n, 2)
-count <- apply(val.n, 1, get_accKD, count = 0)
+count <- apply(test.n, 1, get_accKD, count = 0)
 sink("kdtreeResults.txt")
 print("K-dtree accuracy:")
-print(sum(count)/nrow(val.n))
+print(sum(count)/nrow(test.n))
 sink()
+
+############################################################
 
 sink("weightedResults.txt")
 print("weighted knn accuracy:")
 accuracy <- list()
 for(k in 1:nrow(train.n)) {
   count <- apply(val.n, 1, get_acc,k=k,count = 0)
+  #print(k)
   print(sum(count)/nrow(val.n))
   accuracy <- append(accuracy, (sum(count)/nrow(val.n)))
   
@@ -218,35 +223,44 @@ for(k in 1:nrow(train.n)) {
 i <- 1
 highestVal <- 0
 highestInd <- 1
-lowestVal <- 10
-lowestInd <- 1
+highLen <- 1
+
 for (i in 1:length(accuracy)) {
   if(accuracy[[i]] > highestVal) {
-    highestVal <- accuracy[i]
+    #print(accuracy[[i]])
+    #print(i)
+    highestVal <- accuracy[[i]]
     highestInd <- i
+    highLen <- i
   }
-  if(accuracy[[i]] < lowestVal) {
-    lowestVal <- accuracy[i]
-    lowestInd <- i
+  if((accuracy[[i]] == accuracy[[highestInd]]) & ((i-highLen) <= 1)) {
+    highLen <- i
+    #print("highLen:")
+    #print(i)
   }
 }
 
 highK <- highestInd
-lowK <- lowestInd
-k <- lowK+(highK-lowK)/2
+#highLen <- lowestInd
+#print(highK)
+#print(highLen)
+k <- as.integer(highK+(highLen-highK)/2)
 print("Best k:")
-print(k+1)
+print(k)
 
 print("Best k on test")
 count <- apply(test.n, 1, get_acc,k=k,count = 0)
 print(sum(count)/nrow(test.n))
 sink()
 
+################################################################
+
 sink("unweightedResults.txt")
-print("unweighted knn accuracy:")
+print("Unweighted knn accuracy:")
 accuracy <- list()
 for(k in 1:nrow(train.n)) {
   count <- apply(val.n, 1, get_uw_acc,k=k,count = 0)
+  #print(k)
   print(sum(count)/nrow(val.n))
   accuracy <- append(accuracy, (sum(count)/nrow(val.n)))
   
@@ -254,24 +268,30 @@ for(k in 1:nrow(train.n)) {
 i <- 1
 highestVal <- 0
 highestInd <- 1
-lowestVal <- 10
-lowestInd <- 1
+highLen <- 1
+
 for (i in 1:length(accuracy)) {
   if(accuracy[[i]] > highestVal) {
-    highestVal <- accuracy[i]
+    #print(accuracy[[i]])
+    #print(i)
+    highestVal <- accuracy[[i]]
     highestInd <- i
+    highLen <- i
   }
-  if(accuracy[[i]] < lowestVal) {
-    lowestVal <- accuracy[i]
-    lowestInd <- i
+  if((accuracy[[i]] == accuracy[[highestInd]]) & ((i-highLen) <= 1)) {
+    highLen <- i
+    #print("highLen:")
+    #print(i)
   }
 }
 
 highK <- highestInd
-lowK <- lowestInd
-k <- lowK+(highK-lowK)/2
+#highLen <- lowestInd
+#print(highK)
+#print(highLen)
+k <- as.integer(highK+(highLen-highK)/2)
 print("Best k:")
-print(k+1)
+print(k)
 
 print("Best k on test")
 count <- apply(test.n, 1, get_uw_acc,k=k,count = 0)
