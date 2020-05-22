@@ -192,7 +192,7 @@ data.n.list <- split(data.n, seq(nrow(data.n)))
 #print(data.n)
 trainSize <- floor(0.8*nrow(data))
 valSize <- nrow(data.n.list)-trainSize
-#data.n <- data.n[sample(nrow(data.n), replace = FALSE),]
+data.n <- data.n[sample(nrow(data.n), replace = FALSE),]
 train.n <- data.n[1:trainSize,]
 val.n <- data.n[(trainSize+1):nrow(data.n),]
 test <- read.table("monks-1.test", header = FALSE)
