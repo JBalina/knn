@@ -183,12 +183,12 @@ makeTree <- function(df,count) {
   }
 }
 
-set.seed(32)
+#set.seed(32)
 data <- read.table("monks-1.train", header = FALSE)
 data <- data[ ,1:7]
 data.n <- cbind(class=data[,1],as.data.frame(lapply(data[2:7], normalize)))
 #data.n$v7 <- data[,1]
-#data.n.list <- split(data.n, seq(nrow(data.n)))
+data.n.list <- split(data.n, seq(nrow(data.n)))
 #print(data.n)
 trainSize <- floor(0.8*nrow(data))
 valSize <- nrow(data.n.list)-trainSize
